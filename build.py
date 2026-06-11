@@ -317,7 +317,7 @@ def privacy_page():
     crumb = '<a href="index.html">Home</a> / Legal'
     return (
         px_hero(p, crumb, "Legal", 'Privacy, cookies &amp; <em class="serif">terms.</em>',
-                "Plain-language placeholders pending counsel review before public launch.", "core-services",
+                "How Velivance handles data, cookies and terms on this site &mdash; in plain language.", "core-services",
                 variant="softrise") +
         '<section class="px-section"><div class="wrap"><div class="prose" data-reveal>'
         '<h2>Privacy</h2><p>This site does not set tracking cookies and does not store form submissions &mdash; the contact form composes an email in your own mail client. If you email us, we use your details only to respond to your inquiry.</p>'

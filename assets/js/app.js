@@ -514,12 +514,27 @@
   });
 
   /* ---------- Generic reveals ---------- */
+  // Generic reveals via IntersectionObserver. ScrollTrigger-driven gsap.from
+  // could leave sections near the bottom of short pages stuck hidden (the
+  // trigger scrubbed instead of playing once); IO fires reliably on enter.
   if (!reduced) {
-    $$("[data-reveal]").forEach(function (el) {
-      gsap.from(el.children, {
-        y: 26, opacity: 0, duration: 0.9, ease: "power3.out", stagger: 0.08,
-        scrollTrigger: { trigger: el, start: "top 82%", once: true }
+    var revObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        gsap.to(e.target.children, { opacity: 1, y: 0, duration: 0.9, ease: "power3.out", stagger: 0.08 });
+        revObs.unobserve(e.target);
       });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.01 });
+    $$("[data-reveal]").forEach(function (el) {
+      gsap.set(el.children, { opacity: 0, y: 26 });
+      revObs.observe(el);
     });
+  }
+
+  /* Recompute remaining (scrub) trigger positions once images + web fonts have
+     settled the layout. */
+  window.addEventListener("load", function () { ScrollTrigger.refresh(); });
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
   }
 })();
