@@ -365,9 +365,9 @@
       var subject = "Project inquiry — " + (v("company") || v("name"));
       var body = "Name: " + v("name") + "\nEmail: " + v("email") + "\nCompany: " + v("company") +
                  "\nInterest: " + v("interest") + "\n\n" + v("msg");
-      location.href = "mailto:hello@velivance.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+      location.href = "mailto:vik@avanciers.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
       var note = form.querySelector(".form-note");
-      if (note) note.textContent = "Your email app should open with the message pre-filled. If not, write to hello@velivance.com.";
+      if (note) note.textContent = "Your email app should open with the message pre-filled. If not, write to vik@avanciers.com.";
     });
   });
 

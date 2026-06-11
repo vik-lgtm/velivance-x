@@ -260,7 +260,7 @@ def contact_page():
                 "Tell us the workflow, decision or migration you want to tackle. We'll come back with a focused, fixed-scope way to start — usually a 4–6 week pilot.", "consultant") +
         '<section class="px-section"><div class="wrap"><div class="contact-grid" data-reveal>'
         '<div>'
-        '<div class="ci"><div class="ic">&#9993;</div><div><h3>Email</h3><p><a href="mailto:hello@velivance.com">hello@velivance.com</a></p></div></div>'
+        '<div class="ci"><div class="ic">&#9993;</div><div><h3>Email</h3><p><a href="mailto:vik@avanciers.com">vik@avanciers.com</a></p></div></div>'
         '<div class="ci"><div class="ic">&#9201;</div><div><h3>Response time</h3><p>We reply within one business day.</p></div></div>'
         '<div class="ci"><div class="ic">&#127757;</div><div><h3>Where we operate</h3><p>Through Avanciers &mdash; Canada, USA, Mexico and India.</p></div></div>'
         '</div>'
@@ -275,7 +275,7 @@ def contact_page():
         '<div class="fx"><label for="msg">What do you want to tackle first?</label>'
         '<textarea id="msg" name="msg" rows="3" placeholder="A sentence is plenty."></textarea></div>'
         '<button type="submit" class="btn btn-solid">Compose email &rarr;</button>'
-        '<p class="form-note">Submits via your email app to hello@velivance.com. No data is stored on this site.</p>'
+        '<p class="form-note">Submits via your email app to vik@avanciers.com. No data is stored on this site.</p>'
         '</form></div></div></section>'
     )
 
