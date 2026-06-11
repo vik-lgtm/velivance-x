@@ -106,7 +106,7 @@ def footer(p, cta=True):
         band +
         '<footer class="x-foot"><div class="wrap">'
         '<span>&copy; 2026 Velivance &middot; Backed by Avanciers</span>'
-        '<span class="f-status"><i></i>Operating across Canada &middot; USA &middot; India</span>'
+        '<span class="f-status"><i></i>Operating across Canada &middot; USA &middot; Mexico &middot; India</span>'
         '<a class="roll" href="%sindex.html"><span data-text="velivance.com">velivance.com</span></a>'
         '</div></footer>'
         '<div class="grain" aria-hidden="true"></div>'
@@ -156,7 +156,7 @@ def service_page(s):
         '<div class="impact"><h3>Business impact</h3><ul>%s</ul></div>'
         '</div></div></section>'
         '<section class="px-section alt"><div class="wrap"><div class="px-head" data-reveal>'
-        '<p class="tag">How we work</p><h2>A clear path to <em class="serif">value.</em></h2></div>'
+        '<p class="tag">How we work</p><h2>From kickoff to <em class="serif">impact.</em></h2></div>'
         '<div class="steps-row" data-reveal>%s</div></div></section>'
         '<section class="px-section"><div class="wrap"><div class="px-head" data-reveal>'
         '<p class="tag">Related</p><h2>Keep <em class="serif">exploring.</em></h2></div>'
@@ -215,7 +215,7 @@ def about_page():
         '<div class="impact"><h3>Trusted by leading enterprises &amp; system integrators</h3>'
         '<div class="logos-row"><span>Deloitte</span><span>Wipro</span><span>Infosys</span><span>Cognizant</span>'
         '<span>Tech Mahindra</span><span>Mphasis</span><span>Sonata</span><span>ABB</span></div>'
-        '<p style="font-size:.84rem;color:var(--muted-2);margin:20px 0 0">4 entities &middot; 350+ families supported through our consultant network.</p>'
+        '<p style="font-size:.84rem;color:var(--muted-2);margin:20px 0 0">4 entities &middot; 1,500+ specialists placed with Big-4 and Tier-1 enterprises.</p>'
         '</div></div></div></section>'
     )
 
@@ -253,9 +253,6 @@ def insights_index():
         '<a class="mini" href="insights/%s.html"><div class="mm"><img src="assets/img/%s.webp" alt="" loading="lazy"></div>'
         '<div class="mb"><span class="mono">%s</span><h3>%s</h3><p>%s</p></div></a>'
         % (a["slug"], imgmap.get(a["slug"], "insight-pilot"), a["kind"].upper(), a["title"], a["dek"]) for a in ARTICLES)
-    cards += ('<div class="mini"><div class="mm"><img src="assets/img/insight-data.webp" alt="" loading="lazy"></div>'
-              '<div class="mb"><span class="mono">PLAYBOOK &middot; SOON</span><h3>Your BigQuery + Looker decision foundation</h3>'
-              '<p>A practical sequence for turning scattered data into decisions leaders trust.</p></div></div>')
     return (
         px_hero(p, crumb, "Insights", 'Ideas on AI-first <em class="serif">business.</em>',
                 "Practical points of view on building, governing and scaling AI on Google — written for operators, not hype.", "insight-pilot",
@@ -274,12 +271,15 @@ def article_page(a):
         metrics = '<div class="art-metrics">%s</div>' % "".join(
             '<div><div class="m">%s</div><div class="l">%s</div></div>' % (m, l) for m, l in a["metrics"])
     body_html = "".join(a["body"]).replace('class="callout"', 'class="callout"')
+    mins = max(3, round(len(" ".join(a["body"]).split()) / 200))
+    byline = ('<p class="mono" style="margin:0 0 34px">By Vik Wahi, Co-Founder &middot; %s &middot; %d min read</p>'
+              % (a["date"], mins))
     return (
-        px_hero(p, crumb, "%s · %s · %s" % (a["kind"], a["topic"], a["date"]), a["title"], a["dek"],
+        px_hero(p, crumb, "%s · %s" % (a["kind"], a["topic"]), a["title"], a["dek"],
                 imgmap.get(a["slug"], "insight-pilot"), variant=HERO_ANIM.get(a["slug"], "fadescale")) +
-        '<section class="px-section"><div class="wrap">%s<div class="prose" data-reveal>%s</div>'
+        '<section class="px-section"><div class="wrap">%s%s<div class="prose" data-reveal>%s</div>'
         '<p style="margin-top:46px"><a class="btn btn-line" href="%sinsights.html" data-magnetic>&larr; All insights</a></p>'
-        '</div></section>' % (metrics, body_html, p)
+        '</div></section>' % (byline, metrics, body_html, p)
     )
 
 

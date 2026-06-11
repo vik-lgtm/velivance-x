@@ -11,7 +11,7 @@
   --line-2:rgba(148,163,184,.08);
   --text:#F1F5F9;
   --muted:#94A3B8;
-  --muted-2:#5d6f88;
+  --muted-2:#78889E; /* ≥4.5:1 (WCAG AA) on --bg/--bg-2/--surface for small mono labels */
   --accent:#E97451;
   --accent-2:#FF9D77;
   --blue:#5B8DEF;
@@ -359,7 +359,7 @@ body.menu-open .mnav{opacity:1;visibility:visible;transform:none}
 .logos-row{display:flex;flex-wrap:wrap;gap:12px 26px;margin-top:20px}
 .logos-row span{font-family:var(--display);font-weight:700;color:#7e8fa3;color:#8696ad;font-size:1rem}
 
-.posts{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.posts{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:18px}
 
 .prose{max-width:760px;font-size:1.05rem;color:#c2cedd;line-height:1.8}
 .prose h2{font-size:1.5rem;color:#fff;margin:42px 0 14px}
