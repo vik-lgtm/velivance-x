@@ -100,6 +100,30 @@ h2{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:800}
 .hdr-nav{display:flex;gap:30px;font-size:.9rem;color:var(--muted)}
 .hdr-nav a:hover{text-decoration:none}
 
+/* ---------- Mobile nav (hamburger + overlay) ---------- */
+.nav-toggle{display:none;flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;
+  border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.02);cursor:pointer;padding:0 11px;position:relative;z-index:110}
+.nav-toggle span{display:block;height:2px;width:100%;background:var(--text);border-radius:2px;
+  transition:transform .35s cubic-bezier(.6,0,.2,1),opacity .25s}
+body.menu-open .nav-toggle span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+body.menu-open .nav-toggle span:nth-child(2){opacity:0}
+body.menu-open .nav-toggle span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mnav{position:fixed;inset:0;z-index:90;display:none;flex-direction:column;justify-content:center;gap:4px;
+  padding:0 var(--pad);background:rgba(7,11,20,.98);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  opacity:0;visibility:hidden;transform:translateY(-10px);transition:opacity .45s ease,transform .45s ease,visibility .45s}
+.mnav a{font-family:var(--display);font-weight:700;font-size:clamp(2rem,9vw,2.8rem);letter-spacing:-.03em;
+  color:var(--text);padding:10px 0;border-bottom:1px solid var(--line-2)}
+.mnav a.btn{border:none;font-size:1rem;align-self:flex-start;margin-top:26px;color:#190c06}
+body.menu-open{overflow:hidden}
+body.menu-open .mnav{opacity:1;visibility:visible;transform:none}
+@media(max-width:980px){
+  .nav-toggle{display:flex}
+  .mnav{display:flex}
+}
+@media(max-width:560px){
+  .hdr-cta{display:none}
+}
+
 /* ---------- Hero ---------- */
 .hero{position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
 .hero-bgimg{position:absolute;inset:0;overflow:hidden}

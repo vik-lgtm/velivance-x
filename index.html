@@ -52,8 +52,19 @@
     <a href="insights.html" class="roll"><span data-text="Insights">Insights</span></a>
     <a href="contact.html" class="roll"><span data-text="Contact">Contact</span></a>
   </nav>
-  <a href="contact.html" class="btn btn-solid" data-magnetic>Start a project</a>
+  <a href="contact.html" class="btn btn-solid hdr-cta" data-magnetic>Start a project</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mnav">
+    <span></span><span></span><span></span>
+  </button>
 </header>
+<nav class="mnav" id="mnav" aria-label="Mobile navigation" aria-hidden="true">
+  <a href="services.html">Services</a>
+  <a href="about.html">About</a>
+  <a href="partnership.html">Partnership</a>
+  <a href="insights.html">Insights</a>
+  <a href="contact.html">Contact</a>
+  <a href="contact.html" class="btn btn-solid">Start a project</a>
+</nav>
 
 <main id="top">
 
@@ -148,6 +159,7 @@
 
   <!-- STATS -->
   <section class="stats" data-reveal>
+    <p class="tag" style="grid-column:1/-1;margin-bottom:0">The Avanciers track record</p>
     <div class="stat"><div class="n"><span data-count="10">0</span>+</div><div class="l">Years of enterprise delivery</div></div>
     <div class="stat"><div class="n"><span data-count="1500">0</span>+</div><div class="l">Specialists placed</div></div>
     <div class="stat"><div class="n"><span data-count="4">0</span></div><div class="l">Countries, one standard</div></div>
@@ -234,10 +246,10 @@
 
 <div class="grain" aria-hidden="true"></div>
 
-<script src="https://unpkg.com/three@0.147.0/build/three.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
-<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+<script src="assets/js/vendor/three.min.js"></script>
+<script src="assets/js/vendor/gsap.min.js"></script>
+<script src="assets/js/vendor/ScrollTrigger.min.js"></script>
+<script src="assets/js/vendor/lenis.min.js"></script>
 <script src="assets/js/app.js"></script>
 </body>
 </html>

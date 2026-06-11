@@ -76,6 +76,24 @@
   if (lenis) lenis.on("scroll", function (e) { onScrollPos(e.scroll); });
   else window.addEventListener("scroll", function () { onScrollPos(window.scrollY); }, { passive: true });
 
+  /* ---------- Mobile nav (hamburger overlay) ---------- */
+  (function mobileNav() {
+    var toggle = $("#navToggle"), menu = $("#mnav");
+    if (!toggle || !menu) return;
+    function set(open) {
+      document.body.classList.toggle("menu-open", open);
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      menu.setAttribute("aria-hidden", open ? "false" : "true");
+      if (lenis) { open ? lenis.stop() : lenis.start(); }
+    }
+    toggle.addEventListener("click", function () {
+      set(!document.body.classList.contains("menu-open"));
+    });
+    $$("a", menu).forEach(function (a) { a.addEventListener("click", function () { set(false); }); });
+    window.addEventListener("keydown", function (e) { if (e.key === "Escape") set(false); });
+  })();
+
   /* ---------- Custom cursor ---------- */
   if (finePtr && !reduced) {
     document.body.classList.add("cursor-on");
@@ -217,37 +235,161 @@
     }
   })();
 
-  /* ---------- Hero + loader choreography ---------- */
-  var heroInners = wrapLines(".hero-title .line");
-  var heroFades = $$("[data-hero-fade]");
-  if (heroInners.length) gsap.set(heroInners, { yPercent: 115 });
-  if (heroFades.length) gsap.set(heroFades, { opacity: 0, y: 18 });
-
-  function heroIntro() {
-    glIntro();
-    var tl = gsap.timeline();
-    if (heroInners.length) tl.to(heroInners, { yPercent: 0, duration: 1.1, ease: "power4.out", stagger: 0.1 }, 0.05);
-    if (heroFades.length) tl.to(heroFades, { opacity: 1, y: 0, duration: 0.9, ease: "power3.out", stagger: 0.08 }, heroInners.length ? 0.5 : 0.1);
+  /* ---------- Inner-page hero: per-page entrance variants ---------- */
+  // Char splitter that preserves inline accents (<em class="serif">) and keeps
+  // words intact for wrapping. Returns the array of per-character spans.
+  function splitWordsChars(el) {
+    var words = splitWords(el), chars = [];
+    words.forEach(function (w) {
+      w.style.display = "inline-block";
+      var kids = Array.prototype.slice.call(w.childNodes);
+      w.innerHTML = "";
+      kids.forEach(function (n) {
+        if (n.nodeType === 3) {
+          n.textContent.split("").forEach(function (ch) {
+            var s = document.createElement("span"); s.style.display = "inline-block"; s.textContent = ch;
+            w.appendChild(s); chars.push(s);
+          });
+        } else {
+          var wrap = n.cloneNode(false); w.appendChild(wrap);
+          (n.textContent || "").split("").forEach(function (ch) {
+            var s = document.createElement("span"); s.style.display = "inline-block"; s.textContent = ch;
+            wrap.appendChild(s); chars.push(s);
+          });
+        }
+      });
+    });
+    return chars;
+  }
+  function maskWrap(el) {
+    el.style.overflow = "hidden";
+    el.innerHTML = '<span class="inner" style="display:block;will-change:transform">' + el.innerHTML + "</span>";
+    return el.firstChild;
   }
 
-  (function loader() {
-    var el = $("#loader");
-    if (!el) { heroIntro(); return; }
-    if (reduced) { el.style.display = "none"; heroIntro(); return; }
-    var letters = splitChars($(".loader-word"));
-    gsap.set(letters, { yPercent: 120 });
-    var num = $("#loadNum"), obj = { v: 0 };
-    var tl = gsap.timeline({
-      onComplete: function () { el.style.display = "none"; heroIntro(); }
-    });
-    tl.to(letters, { yPercent: 0, duration: 0.7, ease: "power3.out", stagger: 0.04 }, 0)
-      .to(obj, {
-        v: 100, duration: 1.15, ease: "power2.inOut",
-        onUpdate: function () { num.textContent = String(Math.round(obj.v)).padStart(3, "0"); }
-      }, 0)
-      .to(".loader-core,.loader-count", { opacity: 0, duration: 0.35, ease: "power1.in" }, 1.25)
-      .to(".loader-panel", { yPercent: function (i) { return i === 0 ? -101 : 101; }, duration: 0.85, ease: "power4.inOut" }, 1.4);
-  })();
+  // s: heading treatment — line | clip | plain | word | char
+  var HV = {
+    linemask:    { s: "line",  d: 1.1,  e: "power4.out",    st: 0.12,  from: { yPercent: 115 } },
+    clipwipe:    { s: "clip",  d: 1.05, e: "power3.inOut",  clip: ["inset(0 100% 0 0)", "inset(0 0% 0 0)"] },
+    curtain:     { s: "clip",  d: 1.05, e: "power3.inOut",  clip: ["inset(0 0 100% 0)", "inset(0 0 0% 0)"] },
+    blurfocus:   { s: "plain", d: 1.1,  e: "power2.out",    from: { opacity: 0, scale: 1.06, filter: "blur(14px)" } },
+    softrise:    { s: "plain", d: 1.0,  e: "power2.out",    from: { opacity: 0, y: 26 } },
+    charcascade: { s: "char",  d: 0.7,  e: "power3.out",    st: 0.025, from: { yPercent: 120, opacity: 0 } },
+    charfall:    { s: "char",  d: 0.7,  e: "power3.out",    st: 0.025, from: { yPercent: -120, opacity: 0 } },
+    charflip:    { s: "char",  d: 0.7,  e: "power3.out",    st: 0.02,  from: { rotationX: -90, opacity: 0, transformOrigin: "50% 100%", transformPerspective: 400 } },
+    typeline:    { s: "char",  d: 0.16, e: "none",          st: 0.022, from: { opacity: 0 } },
+    splitcenter: { s: "char",  d: 0.7,  e: "back.out(1.7)", st: 0.02,  fromEach: "center", from: { opacity: 0, scale: 0.4 } },
+    wordleft:    { s: "word",  d: 0.8,  e: "power3.out",    st: 0.06,  from: { x: -44, opacity: 0 } },
+    wordup:      { s: "word",  d: 0.85, e: "power4.out",    st: 0.06,  from: { yPercent: 120, opacity: 0 } },
+    scalepop:    { s: "word",  d: 0.7,  e: "back.out(1.6)", st: 0.05,  from: { scale: 0.5, opacity: 0, transformOrigin: "50% 100%" } },
+    fadescale:   { s: "word",  d: 0.9,  e: "power2.out",    st: 0.05,  from: { opacity: 0, scale: 1.14 } },
+    blurwords:   { s: "word",  d: 0.8,  e: "power2.out",    st: 0.06,  from: { opacity: 0, filter: "blur(10px)", y: 18 } },
+    accentdraw:  { s: "word",  d: 0.9,  e: "power4.out",    st: 0.07,  from: { yPercent: 115 }, underline: true },
+    updown:      { s: "word",  d: 0.8,  e: "power3.out",    st: 0.05,  ud: true, from: { opacity: 0 } },
+    skewrise:    { s: "word",  d: 0.9,  e: "power4.out",    st: 0.05,  from: { yPercent: 110, opacity: 0, skewY: 7 } }
+  };
+  // Background drift-in (animates the .px-bg container, leaving the img's CSS
+  // ken-burns intact). Scale stays >1 so directional offsets never reveal edges.
+  var HV_BG = {
+    linemask: { scale: 1.14 }, clipwipe: { scale: 1.12, xPercent: -5 }, curtain: { scale: 1.12, yPercent: -4 },
+    blurfocus: { scale: 1.1, filter: "blur(12px)" }, softrise: { scale: 1.07 },
+    charcascade: { scale: 1.12, xPercent: -5 }, charfall: { scale: 1.12, yPercent: -5 }, charflip: { scale: 1.12, yPercent: 5 },
+    typeline: { scale: 1.12, xPercent: 5 }, splitcenter: { scale: 1.14 },
+    wordleft: { scale: 1.12, xPercent: 5 }, wordup: { scale: 1.12 }, scalepop: { scale: 1.16 },
+    fadescale: { scale: 1.15 }, blurwords: { scale: 1.08, filter: "blur(9px)" }, accentdraw: { scale: 1.12 },
+    updown: { scale: 1.12, yPercent: -5 }, skewrise: { scale: 1.12, yPercent: -5 }
+  };
+
+  function initPxHero(px) {
+    var cfg = HV[px.getAttribute("data-hero")] || HV.softrise;
+    var h1 = $("h1", px), bg = $(".px-bg", px);
+    var chrome = [$(".crumb", px), $(".tag", px), $(".sub", px)].filter(Boolean);
+
+    if (reduced) return; // leave fully visible, static
+
+    if (chrome.length) gsap.set(chrome, { opacity: 0, y: 16 });
+    var tl = gsap.timeline({ delay: 0.12 });
+
+    if (bg) {
+      gsap.set(bg, HV_BG[px.getAttribute("data-hero")] || { scale: 1.08 });
+      tl.to(bg, { scale: 1, xPercent: 0, yPercent: 0, filter: "blur(0px)", duration: 1.9, ease: "power2.out" }, 0);
+    }
+
+    if (h1) {
+      if (cfg.s === "clip") {
+        gsap.set(h1, { clipPath: cfg.clip[0], webkitClipPath: cfg.clip[0] });
+        tl.to(h1, { clipPath: cfg.clip[1], webkitClipPath: cfg.clip[1], duration: cfg.d, ease: cfg.e }, 0.1);
+      } else if (cfg.s === "plain") {
+        gsap.set(h1, cfg.from);
+        tl.to(h1, { opacity: 1, scale: 1, y: 0, filter: "blur(0px)", duration: cfg.d, ease: cfg.e }, 0.1);
+      } else if (cfg.s === "line") {
+        var inner = maskWrap(h1);
+        gsap.set(inner, cfg.from);
+        tl.to(inner, { yPercent: 0, opacity: 1, duration: cfg.d, ease: cfg.e }, 0.1);
+      } else {
+        var pieces = cfg.s === "char" ? splitWordsChars(h1) : splitWords(h1);
+        pieces.forEach(function (p) { p.style.display = "inline-block"; });
+        var to = { opacity: 1, x: 0, y: 0, yPercent: 0, scale: 1, rotationX: 0, skewY: 0, filter: "blur(0px)", duration: cfg.d, ease: cfg.e };
+        if (cfg.ud) {
+          pieces.forEach(function (p, i) { gsap.set(p, { opacity: 0, yPercent: i % 2 ? 120 : -120 }); });
+        } else {
+          gsap.set(pieces, cfg.from);
+          to.stagger = cfg.fromEach ? { each: cfg.st, from: cfg.fromEach } : cfg.st;
+        }
+        if (cfg.ud) to.stagger = cfg.st;
+        tl.to(pieces, to, 0.1);
+        if (cfg.underline) {
+          var em = $(".serif", h1);
+          if (em) {
+            em.style.position = "relative";
+            var u = document.createElement("span");
+            u.style.cssText = "position:absolute;left:0;right:0;bottom:-.06em;height:2px;background:var(--accent-2);transform:scaleX(0);transform-origin:left center";
+            em.appendChild(u);
+            tl.to(u, { scaleX: 1, duration: 0.55, ease: "power2.out" }, ">-0.1");
+          }
+        }
+      }
+    }
+
+    if (chrome.length) tl.to(chrome, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", stagger: 0.08 }, 0.32);
+  }
+
+  /* ---------- Hero + loader choreography ---------- */
+  var pxHero = $(".px-hero[data-hero]");
+  if (pxHero) {
+    initPxHero(pxHero);
+  } else {
+    var heroInners = wrapLines(".hero-title .line");
+    var heroFades = $$("[data-hero-fade]");
+    if (heroInners.length) gsap.set(heroInners, { yPercent: 115 });
+    if (heroFades.length) gsap.set(heroFades, { opacity: 0, y: 18 });
+
+    var heroIntro = function () {
+      glIntro();
+      var tl = gsap.timeline();
+      if (heroInners.length) tl.to(heroInners, { yPercent: 0, duration: 1.1, ease: "power4.out", stagger: 0.1 }, 0.05);
+      if (heroFades.length) tl.to(heroFades, { opacity: 1, y: 0, duration: 0.9, ease: "power3.out", stagger: 0.08 }, heroInners.length ? 0.5 : 0.1);
+    };
+
+    (function loader() {
+      var el = $("#loader");
+      if (!el) { heroIntro(); return; }
+      if (reduced) { el.style.display = "none"; heroIntro(); return; }
+      var letters = splitChars($(".loader-word"));
+      gsap.set(letters, { yPercent: 120 });
+      var num = $("#loadNum"), obj = { v: 0 };
+      var tl = gsap.timeline({
+        onComplete: function () { el.style.display = "none"; heroIntro(); }
+      });
+      tl.to(letters, { yPercent: 0, duration: 0.7, ease: "power3.out", stagger: 0.04 }, 0)
+        .to(obj, {
+          v: 100, duration: 1.15, ease: "power2.inOut",
+          onUpdate: function () { num.textContent = String(Math.round(obj.v)).padStart(3, "0"); }
+        }, 0)
+        .to(".loader-core,.loader-count", { opacity: 0, duration: 0.35, ease: "power1.in" }, 1.25)
+        .to(".loader-panel", { yPercent: function (i) { return i === 0 ? -101 : 101; }, duration: 0.85, ease: "power4.inOut" }, 1.4);
+    })();
+  }
 
   /* ---------- Marquee + scroll velocity ---------- */
   if ($("#marqTrack")) {

@@ -25,6 +25,25 @@ AGENTIC, CORE, ARTICLES, SVC_IMG = _mod.AGENTIC, _mod.CORE, _mod.ARTICLES, _mod.
 ALL_SERVICES = AGENTIC + CORE
 BRAND = "Velivance"
 
+# Per-page hero entrance animation. Every page gets a distinct variant — the
+# engine that plays each one lives in assets/js/app.js (keyed off data-hero).
+HERO_ANIM = {
+    # service detail pages (by slug)
+    "enterprise-ai-agents": "charcascade",
+    "agentic-data-decision-intelligence": "wordleft",
+    "ai-customer-experience": "blurfocus",
+    "ai-knowledge-search": "clipwipe",
+    "cloud-migration-modernization": "skewrise",
+    "custom-gemini-applications": "scalepop",
+    "data-analytics-reporting": "charflip",
+    "google-workspace": "wordup",
+    "secure-ai-adoption-governance": "curtain",
+    "workspace-ai-transformation": "splitcenter",
+    # article pages (by slug)
+    "enterprise-ai-agents-from-pilot-to-production": "charfall",
+    "we-ran-our-own-company-on-google": "fadescale",
+}
+
 FAVICON = ("data:image/svg+xml,%3Csvg viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E"
            "%3Cpath d='M5 14h9M5 20h6M5 26h9' stroke='%23F1F5F9' stroke-width='2.6' stroke-linecap='round'/%3E"
            "%3Cpath d='M19 10 L30 20 L19 30' stroke='%23F1F5F9' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E"
@@ -59,14 +78,20 @@ def header(p, active):
         '<a href="%s%s" class="roll"%s><span data-text="%s">%s</span></a>'
         % (p, href, ' style="color:var(--accent-2)"' if active == label else "", label, label)
         for href, label in links)
+    mlinks = "".join('<a href="%s%s">%s</a>' % (p, href, label) for href, label in links)
     return (
         '<div class="cursor" aria-hidden="true"><div class="cursor-dot" id="cDot"></div>'
         '<div class="cursor-ring" id="cRing"><span id="cLabel"></span></div></div>'
         '<header class="hdr is-solid" id="hdr">'
         '<a class="brand" href="%sindex.html" aria-label="Velivance home">%s<span>Velivance</span></a>'
         '<nav class="hdr-nav" aria-label="Site">%s</nav>'
-        '<a href="%scontact.html" class="btn btn-solid" data-magnetic>Start a project</a>'
-        '</header>' % (p, MARK, nav, p)
+        '<a href="%scontact.html" class="btn btn-solid hdr-cta" data-magnetic>Start a project</a>'
+        '<button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mnav">'
+        '<span></span><span></span><span></span></button>'
+        '</header>'
+        '<nav class="mnav" id="mnav" aria-label="Mobile navigation" aria-hidden="true">%s'
+        '<a href="%scontact.html" class="btn btn-solid">Start a project</a></nav>'
+        % (p, MARK, nav, p, mlinks, p)
     )
 
 
@@ -85,20 +110,21 @@ def footer(p, cta=True):
         '<a class="roll" href="%sindex.html"><span data-text="velivance.com">velivance.com</span></a>'
         '</div></footer>'
         '<div class="grain" aria-hidden="true"></div>'
-        '<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>'
-        '<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>'
-        '<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>'
-        '<script src="%sassets/js/app.js"></script></body></html>' % (p, p)
+        '<script src="%sassets/js/vendor/gsap.min.js"></script>'
+        '<script src="%sassets/js/vendor/ScrollTrigger.min.js"></script>'
+        '<script src="%sassets/js/vendor/lenis.min.js"></script>'
+        '<script src="%sassets/js/app.js"></script></body></html>' % (p, p, p, p, p)
     )
 
 
-def px_hero(p, crumb_html, tag, title_html, lead, img):
+def px_hero(p, crumb_html, tag, title_html, lead, img, variant="softrise"):
     return (
-        '<section class="px-hero">'
+        '<section class="px-hero" data-hero="%s">'
         '<div class="px-bg" aria-hidden="true"><img src="%sassets/img/%s.webp" alt=""></div>'
         '<div class="wrap"><span class="crumb">%s</span>'
         '<p class="tag" data-hero-fade>%s</p><h1 data-hero-fade>%s</h1>'
-        '<p class="sub" data-hero-fade>%s</p></div></section>' % (p, img, crumb_html, tag, title_html, lead)
+        '<p class="sub" data-hero-fade>%s</p></div></section>'
+        % (variant, p, img, crumb_html, tag, title_html, lead)
     )
 
 
@@ -122,7 +148,8 @@ def service_page(s):
     name_parts = s["name"].rsplit(" ", 1)
     title_html = '%s <em class="serif">%s</em>' % (name_parts[0], name_parts[1]) if len(name_parts) == 2 else s["name"]
     body = (
-        px_hero(p, crumb, s["eyebrow"], title_html, s["intro"], SVC_IMG.get(s["slug"], "hero")) +
+        px_hero(p, crumb, s["eyebrow"], title_html, s["intro"], SVC_IMG.get(s["slug"], "hero"),
+                variant=HERO_ANIM.get(s["slug"], "softrise")) +
         '<section class="px-section"><div class="wrap"><div class="two-col" data-reveal>'
         '<div><p class="tag">What\'s included</p><h2>What we <em class="serif">deliver.</em></h2>'
         '<ul class="checks">%s</ul></div>'
@@ -146,7 +173,8 @@ def services_index():
     crumb = '<a href="index.html">Home</a> / Services'
     return (
         px_hero(p, crumb, "Services", 'Everything it takes to be <em class="serif">AI-first.</em>',
-                "Ten focused services across agentic AI and core Google technology — each scoped to a measurable outcome, each a step toward an AI-first operating model.", "agentic-ai") +
+                "Ten focused services across agentic AI and core Google technology — each scoped to a measurable outcome, each a step toward an AI-first operating model.", "agentic-ai",
+                variant="linemask") +
         '<section class="px-section"><div class="wrap"><div class="px-head" data-reveal>'
         '<p class="tag">Agentic AI</p><h2>AI that does the <em class="serif">work.</em></h2></div>'
         '<div class="minis" data-reveal>%s</div></div></section>'
@@ -161,7 +189,8 @@ def about_page():
     crumb = '<a href="index.html">Home</a> / About'
     return (
         px_hero(p, crumb, "About us", 'Operators building the <em class="serif">AI-first</em> enterprise.',
-                "Velivance is a Google-first AI, data and cloud transformation firm — launched and backed by Avanciers, with a singular focus on turning Google technology into measurable business outcomes.", "about") +
+                "Velivance is a Google-first AI, data and cloud transformation firm — launched and backed by Avanciers, with a singular focus on turning Google technology into measurable business outcomes.", "about",
+                variant="accentdraw") +
         '<section class="px-section"><div class="wrap"><div class="two-col" data-reveal>'
         '<div><p class="tag">Our story</p><h2>Specialist by <em class="serif">design.</em></h2>'
         '<p class="sub" style="margin-bottom:18px">The market is full of generalists juggling three clouds. We chose the opposite path: go deep on Google. As a Certified Google Cloud Partner, we pair that focus with a decade of enterprise delivery from our parent, Avanciers.</p>'
@@ -173,7 +202,7 @@ def about_page():
         '<section class="px-section alt"><div class="wrap"><div class="px-head" data-reveal>'
         '<p class="tag">Leadership</p><h2>Operators who have <em class="serif">built</em> this before.</h2></div>'
         '<div class="team" data-reveal>'
-        '<div class="member vet"><div class="av">&#9733;</div><h3>[Industry Veteran]</h3><p class="role">Chairman &amp; Strategic Advisor</p><p>Three decades scaling enterprise technology businesses. Bio to confirm.</p></div>'
+        '<div class="member vet"><div class="av">&#9733;</div><h3>Chairman &amp; Strategic Advisor</h3><p class="role">To be announced</p><p>A senior enterprise-technology leader with three decades of scaling global businesses is joining to chair Velivance. Announcement soon.</p></div>'
         '<div class="member"><div class="av">VW</div><h3>Vik Wahi</h3><p class="role">Co-Founder &amp; CEO</p><p>Co-founder of Avanciers. Builds the data, AI and analytics systems that prove the model before it ships to clients.</p></div>'
         '<div class="member"><div class="av">AW</div><h3>Adi Wahi</h3><p class="role">Co-Founder</p><p>Co-founder of Avanciers. Leads partnerships and the Google-first go-to-market across North America.</p></div>'
         '</div></div></section>'
@@ -201,7 +230,8 @@ def partnership_page():
     gp = "".join('<div class="gchip"><b>%s</b><span>%s</span></div>' % (n, d) for n, d in gproducts)
     return (
         px_hero(p, crumb, "The Google advantage", 'A Certified Google Cloud <em class="serif">Partner.</em>',
-                "We concentrate on one ecosystem so you get depth, not breadth — and the benefits of Google's partner programs on every engagement.", "platform") +
+                "We concentrate on one ecosystem so you get depth, not breadth — and the benefits of Google's partner programs on every engagement.", "platform",
+                variant="blurwords") +
         '<section class="px-section"><div class="wrap"><div class="props" data-reveal>'
         '<div class="prop"><h3>Co-sell &amp; funding</h3><p>Access to Google co-sell motions and funded proofs-of-concept that lower the cost of getting started.</p></div>'
         '<div class="prop"><h3>Marketplace</h3><p>Procure our solutions through Google Cloud Marketplace, drawing down committed spend.</p></div>'
@@ -228,7 +258,8 @@ def insights_index():
               '<p>A practical sequence for turning scattered data into decisions leaders trust.</p></div></div>')
     return (
         px_hero(p, crumb, "Insights", 'Ideas on AI-first <em class="serif">business.</em>',
-                "Practical points of view on building, governing and scaling AI on Google — written for operators, not hype.", "insight-pilot") +
+                "Practical points of view on building, governing and scaling AI on Google — written for operators, not hype.", "insight-pilot",
+                variant="updown") +
         '<section class="px-section"><div class="wrap"><div class="posts" data-reveal>%s</div></div></section>' % cards
     )
 
@@ -245,7 +276,7 @@ def article_page(a):
     body_html = "".join(a["body"]).replace('class="callout"', 'class="callout"')
     return (
         px_hero(p, crumb, "%s · %s · %s" % (a["kind"], a["topic"], a["date"]), a["title"], a["dek"],
-                imgmap.get(a["slug"], "insight-pilot")) +
+                imgmap.get(a["slug"], "insight-pilot"), variant=HERO_ANIM.get(a["slug"], "fadescale")) +
         '<section class="px-section"><div class="wrap">%s<div class="prose" data-reveal>%s</div>'
         '<p style="margin-top:46px"><a class="btn btn-line" href="%sinsights.html" data-magnetic>&larr; All insights</a></p>'
         '</div></section>' % (metrics, body_html, p)
@@ -257,7 +288,8 @@ def contact_page():
     crumb = '<a href="index.html">Home</a> / Contact'
     return (
         px_hero(p, crumb, "Talk to us", 'Let\'s scope your first <em class="serif">win.</em>',
-                "Tell us the workflow, decision or migration you want to tackle. We'll come back with a focused, fixed-scope way to start — usually a 4–6 week pilot.", "consultant") +
+                "Tell us the workflow, decision or migration you want to tackle. We'll come back with a focused, fixed-scope way to start — usually a 4–6 week pilot.", "consultant",
+                variant="typeline") +
         '<section class="px-section"><div class="wrap"><div class="contact-grid" data-reveal>'
         '<div>'
         '<div class="ci"><div class="ic">&#9993;</div><div><h3>Email</h3><p><a href="mailto:vik@avanciers.com">vik@avanciers.com</a></p></div></div>'
@@ -285,7 +317,8 @@ def privacy_page():
     crumb = '<a href="index.html">Home</a> / Legal'
     return (
         px_hero(p, crumb, "Legal", 'Privacy, cookies &amp; <em class="serif">terms.</em>',
-                "Plain-language placeholders pending counsel review before public launch.", "core-services") +
+                "Plain-language placeholders pending counsel review before public launch.", "core-services",
+                variant="softrise") +
         '<section class="px-section"><div class="wrap"><div class="prose" data-reveal>'
         '<h2>Privacy</h2><p>This site does not set tracking cookies and does not store form submissions &mdash; the contact form composes an email in your own mail client. If you email us, we use your details only to respond to your inquiry.</p>'
         '<h2>Cookies</h2><p>No analytics or advertising cookies are used on this site.</p>'
