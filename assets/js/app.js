@@ -92,6 +92,11 @@
     });
     $$("a", menu).forEach(function (a) { a.addEventListener("click", function () { set(false); }); });
     window.addEventListener("keydown", function (e) { if (e.key === "Escape") set(false); });
+    // Crossing to desktop hides .mnav via media query — close it too, or the
+    // lingering body.menu-open (overflow:hidden + stopped Lenis) freezes the page.
+    window.addEventListener("resize", function () {
+      if (window.innerWidth > 980 && document.body.classList.contains("menu-open")) set(false);
+    });
   })();
 
   /* ---------- Custom cursor ---------- */
