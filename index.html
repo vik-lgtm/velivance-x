@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Velivance — Google-first AI, data & cloud transformation</title>
+<meta name="description" content="Velivance is a Google-first transformation studio. We migrate, modernize and put Gemini to work across the business — at the speed your market demands.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 14h9M5 20h6M5 26h9' stroke='%23F1F5F9' stroke-width='2.6' stroke-linecap='round'/%3E%3Cpath d='M19 10 L30 20 L19 30' stroke='%23F1F5F9' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='30' cy='20' r='4.6' fill='%23E97451'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- Preloader -->
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader-panel"></div>
+  <div class="loader-panel"></div>
+  <div class="loader-core">
+    <svg class="loader-mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+      <path d="M5 14h9M5 20h6M5 26h9" stroke="#F1F5F9" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M19 10 L30 20 L19 30" stroke="#F1F5F9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="30" cy="20" r="4.6" fill="#E97451"/>
+    </svg>
+    <div class="loader-word" aria-hidden="true">VELIVANCE</div>
+  </div>
+  <div class="loader-count"><span id="loadNum">000</span></div>
+</div>
+
+<!-- Custom cursor -->
+<div class="cursor" aria-hidden="true">
+  <div class="cursor-dot" id="cDot"></div>
+  <div class="cursor-ring" id="cRing"><span id="cLabel"></span></div>
+</div>
+
+<!-- Header -->
+<header class="hdr" id="hdr">
+  <a class="brand" href="#top" aria-label="Velivance home">
+    <svg class="brand-mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+      <path d="M5 14h9M5 20h6M5 26h9" stroke="#F1F5F9" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M19 10 L30 20 L19 30" stroke="#F1F5F9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="30" cy="20" r="4.6" fill="#E97451"/>
+    </svg>
+    <span>Velivance</span>
+  </a>
+  <nav class="hdr-nav" aria-label="Site">
+    <a href="services.html" class="roll"><span data-text="Services">Services</span></a>
+    <a href="about.html" class="roll"><span data-text="About">About</span></a>
+    <a href="partnership.html" class="roll"><span data-text="Partnership">Partnership</span></a>
+    <a href="insights.html" class="roll"><span data-text="Insights">Insights</span></a>
+    <a href="contact.html" class="roll"><span data-text="Contact">Contact</span></a>
+  </nav>
+  <a href="contact.html" class="btn btn-solid" data-magnetic>Start a project</a>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bgimg" aria-hidden="true"><img src="assets/img/hero.webp" alt=""></div>
+    <canvas id="gl" aria-hidden="true"></canvas>
+    <div class="hero-scrim" aria-hidden="true"></div>
+    <div class="hero-content">
+      <p class="tag" data-hero-fade>Google-first · AI · Data · Cloud</p>
+      <h1 class="hero-title" id="heroTitle">
+        <span class="line">We build</span>
+        <span class="line"><em class="serif">AI-first</em></span>
+        <span class="line">enterprises.</span>
+      </h1>
+      <p class="sub" data-hero-fade>Velivance is a Google-first transformation studio. We migrate, modernize
+        and put Gemini to work across the business — at the speed your market demands.</p>
+      <div class="hero-cta" data-hero-fade>
+        <a class="btn btn-solid btn-lg" href="contact.html" data-magnetic>Start a project <span class="arr">↗</span></a>
+        <a class="btn btn-line btn-lg" href="#services" data-magnetic>Explore the work</a>
+      </div>
+    </div>
+    <div class="hero-foot" data-hero-fade>
+      <span class="mono">EST. 2026 — BACKED BY AVANCIERS</span>
+      <span class="scroll-cue" aria-hidden="true"><i></i>SCROLL</span>
+      <span class="mono">CANADA · USA · INDIA</span>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marq" aria-hidden="true">
+    <div class="marq-track" id="marqTrack">
+      <span>Move fast — Move forward — Gemini — Vertex AI — BigQuery — </span><span>Move fast — Move forward — Gemini — Vertex AI — BigQuery — </span>
+    </div>
+  </div>
+
+  <!-- MANIFESTO -->
+  <section class="manifesto" id="manifesto">
+    <p class="tag">Manifesto</p>
+    <p class="fill-text" id="fillText">Most enterprises don't have an AI problem. They have a
+      <em class="serif">velocity</em> problem. We fix that — on Google.</p>
+  </section>
+
+  <!-- SERVICES — horizontal journey -->
+  <section class="svc" id="services">
+    <div class="svc-head">
+      <p class="tag">Services</p>
+      <h2>Four ways we<br>move you <em class="serif">forward.</em></h2>
+    </div>
+    <div class="svc-pin" id="svcPin">
+      <div class="svc-track" id="svcTrack">
+        <article class="panel">
+          <div class="p-num" aria-hidden="true">01</div>
+          <div class="p-media" data-cursor="view"><img src="assets/img/agentic-ai.webp" alt="Enterprise AI agents artwork"></div>
+          <div class="p-body">
+            <h3>Enterprise AI Agents</h3>
+            <p>Gemini agents that do real work across departments — drafting, deciding, resolving — with a human in the loop where it matters.</p>
+            <a class="p-link roll" href="services/enterprise-ai-agents.html"><span data-text="Explore →">Explore →</span></a>
+          </div>
+        </article>
+        <article class="panel">
+          <div class="p-num" aria-hidden="true">02</div>
+          <div class="p-media" data-cursor="view"><img src="assets/img/insight-data.webp" alt="Decision intelligence artwork"></div>
+          <div class="p-body">
+            <h3>Data &amp; Decision Intelligence</h3>
+            <p>BigQuery, Looker and a conversational layer on top — so leaders ask questions in plain language and get answers in seconds.</p>
+            <a class="p-link roll" href="services/agentic-data-decision-intelligence.html"><span data-text="Explore →">Explore →</span></a>
+          </div>
+        </article>
+        <article class="panel">
+          <div class="p-num" aria-hidden="true">03</div>
+          <div class="p-media" data-cursor="view"><img src="assets/img/core-services.webp" alt="Cloud migration artwork"></div>
+          <div class="p-body">
+            <h3>Cloud Migration &amp; Modernization</h3>
+            <p>Land on Google Cloud without the downtime tax — landing zones, re-platforming and modernization done by people who do it daily.</p>
+            <a class="p-link roll" href="services/cloud-migration-modernization.html"><span data-text="Explore →">Explore →</span></a>
+          </div>
+        </article>
+        <article class="panel">
+          <div class="p-num" aria-hidden="true">04</div>
+          <div class="p-media" data-cursor="view"><img src="assets/img/team-collab.webp" alt="Workspace AI artwork"></div>
+          <div class="p-body">
+            <h3>Workspace AI Transformation</h3>
+            <p>Put Gemini to work inside Gmail, Docs, Sheets and Meet — the tools your teams already live in, made faster.</p>
+            <a class="p-link roll" href="services/workspace-ai-transformation.html"><span data-text="Explore →">Explore →</span></a>
+          </div>
+        </article>
+      </div>
+      <div class="svc-progress" aria-hidden="true"><i id="svcBar"></i></div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats" data-reveal>
+    <div class="stat"><div class="n"><span data-count="10">0</span>+</div><div class="l">Years of enterprise delivery</div></div>
+    <div class="stat"><div class="n"><span data-count="1500">0</span>+</div><div class="l">Specialists placed</div></div>
+    <div class="stat"><div class="n"><span data-count="4">0</span></div><div class="l">Countries, one standard</div></div>
+    <div class="stat"><div class="n"><span data-count="300">0</span>+</div><div class="l">Consultants on tap</div></div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="gallery" id="gallery">
+    <p class="tag">The work</p>
+    <h2>Built on the full<br>Google <em class="serif">stack.</em></h2>
+    <div class="g-grid">
+      <figure class="g-item" data-speed="-8" data-cursor="view"><img src="assets/img/insight-google.webp" alt="Command center artwork"><figcaption class="mono">DECISION SYSTEMS</figcaption></figure>
+      <figure class="g-item" data-speed="6" data-cursor="view"><img src="assets/img/platform.webp" alt="Platform layers artwork"><figcaption class="mono">CLOUD PLATFORMS</figcaption></figure>
+      <figure class="g-item" data-speed="-4" data-cursor="view"><img src="assets/img/about.webp" alt="Momentum artwork"><figcaption class="mono">AI AGENTS</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- APPROACH — stacked cards -->
+  <section class="approach" id="approach">
+    <div class="ap-head">
+      <p class="tag">Approach</p>
+      <h2>A clear path<br>to <em class="serif">value.</em></h2>
+    </div>
+    <div class="stack">
+      <div class="s-card">
+        <div class="s-top"><span class="mono">PHASE 01</span><span class="s-num">01</span></div>
+        <h3>Identify</h3>
+        <p>Find the one workflow where AI pays for itself first — and the number that proves it.</p>
+        <img src="assets/img/insight-pilot.webp" alt="" loading="lazy">
+      </div>
+      <div class="s-card">
+        <div class="s-top"><span class="mono">PHASE 02</span><span class="s-num">02</span></div>
+        <h3>Design</h3>
+        <p>Architect it on Google Cloud — secure, governed, integrated with the systems you already run.</p>
+        <img src="assets/img/platform.webp" alt="" loading="lazy">
+      </div>
+      <div class="s-card">
+        <div class="s-top"><span class="mono">PHASE 03</span><span class="s-num">03</span></div>
+        <h3>Build &amp; Migrate</h3>
+        <p>Ship to production in weeks, not quarters. Agents, analytics and apps that do real work.</p>
+        <img src="assets/img/core-services.webp" alt="" loading="lazy">
+      </div>
+      <div class="s-card">
+        <div class="s-top"><span class="mono">PHASE 04</span><span class="s-num">04</span></div>
+        <h3>Govern &amp; Scale</h3>
+        <p>Measure ROI, harden governance, expand from one win to an operating model.</p>
+        <img src="assets/img/insight-google.webp" alt="" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <!-- PROOF -->
+  <section class="proof" id="proof">
+    <div class="pr-text">
+      <p class="tag">Proof</p>
+      <h2>We prove it on <em class="serif">ourselves</em> first.</h2>
+      <p class="sub">Our own operating data runs on BigQuery. Our reporting lives in Looker. Our leadership asks a
+        Gemini agent — and gets answers in minutes, not days. The first reference implementation is us.</p>
+      <a class="btn btn-line" href="insights/we-ran-our-own-company-on-google.html" target="_blank" rel="noopener" data-magnetic>Read the case study <span class="arr">↗</span></a>
+    </div>
+    <div class="pr-media">
+      <figure data-speed="-6" data-cursor="view"><img src="assets/img/people-work.webp" alt="Analyst at a dashboard"></figure>
+      <figure data-speed="5" data-cursor="view"><img src="assets/img/consultant.webp" alt="Consultant presenting"></figure>
+    </div>
+  </section>
+
+  <!-- CTA / FOOTER -->
+  <section class="outro" id="contact">
+    <h2 class="outro-title">
+      <span class="line">Move <em class="serif">fast.</em></span>
+      <span class="line">Move <em class="serif">forward.</em></span>
+    </h2>
+    <a class="big-btn" href="mailto:hello@velivance.com" data-magnetic data-cursor="hide">
+      <span>Talk to us</span><span class="arr">→</span>
+    </a>
+    <footer class="foot">
+      <span>© 2026 Velivance</span>
+      <span class="f-status"><i></i>Operating across Canada · USA · India</span>
+      <a class="roll" href="services.html"><span data-text="All services →">All services →</span></a>
+    </footer>
+  </section>
+
+</main>
+
+<div class="grain" aria-hidden="true"></div>
+
+<script src="https://unpkg.com/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
